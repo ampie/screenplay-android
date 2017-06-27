@@ -1,0 +1,80 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+group = 'com.sbg.bdd'
+version = '0.0.1'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+dependencies {
+    implementation 'com.sbg.bdd:screenplay-core:0.0.1'
+    implementation('com.sbg.bdd:screenplay-wiremock:0.0.1'){
+        exclude(module: 'org.mozilla:rhino')
+        exclude(module: 'junit')
+        exclude(module: 'handlebars')
+        exclude(module: 'antlr4-runtime')
+        exclude(module: 'rhino')
+        exclude(module: 'slf4j-api')
+    }
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude module: 'junit'
+    })
+    implementation 'com.android.support:appcompat-v7:25.4.0'
+    implementation('info.cukes:cucumber-android:1.2.5'){
+        exclude module: 'cucumber-jvm-deps'
+    }
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation('com.github.tomakehurst:wiremock:2.6.0'){
+        exclude(module: 'httpclient')
+        exclude(module: 'slf4j-api')
+        exclude(module: 'commons-lang3')
+        exclude(module: 'jackson-databind')
+        exclude(module: 'jackson-annotations')
+        exclude(module: 'jackson-core')
+        exclude(module: 'asm')
+        exclude(module: 'handlebars')
+        exclude(module: 'junit')
+        exclude(group: 'org.eclipse.jetty')
+        exclude(module: 'guava')
+        exclude(group: 'org.xmlunit')
+    }
+    testImplementation 'junit:junit:4.12'
+}
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "source"
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'com.sbg.bdd'
+            artifactId 'screenplay-android'
+            version '0.0.1'
+            artifact(sourceJar)
+            artifact("$buildDir/outputs/aar/screenplay-android-release.aar")
+        }
+    }
+}
