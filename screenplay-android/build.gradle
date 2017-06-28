@@ -41,7 +41,7 @@ dependencies {
         exclude module: 'cucumber-java'
         exclude group: 'com.android.support'
     }
-    compile('info.cukes:cucumber-java:1.2.5-EN'){
+    compile('info.cukes:cucumber-java:1.2.5-en'){
     }
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     compile 'com.google.code.gson:gson:2.8.0'
