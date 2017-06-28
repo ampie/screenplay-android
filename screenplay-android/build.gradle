@@ -23,8 +23,8 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 dependencies {
-    compile 'com.sbg.bdd:screenplay-core:0.0.1'
-    compile('com.sbg.bdd:screenplay-wiremock:0.0.1'){
+    compile 'com.sbg.bdd:screenplay-core:0.0.3'
+    compile('com.sbg.bdd:screenplay-wiremock:0.0.3'){
         exclude(module: 'org.mozilla:rhino')
         exclude(module: 'junit')
         exclude(module: 'handlebars')
