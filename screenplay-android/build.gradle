@@ -1,18 +1,12 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.sbg.android.lib'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 group = 'com.sbg.bdd'
 version = '0.0.1'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
     defaultConfig {
-        minSdkVersion 10
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionName version
     }
     buildTypes {
         release {
@@ -20,14 +14,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 dependencies {
-    implementation 'com.sbg.bdd:screenplay-core:0.0.1'
-    implementation('com.sbg.bdd:screenplay-wiremock:0.0.1'){
+    compile 'com.sbg.bdd:screenplay-core:0.0.1'
+    compile('com.sbg.bdd:screenplay-wiremock:0.0.1'){
         exclude(module: 'org.mozilla:rhino')
         exclude(module: 'junit')
         exclude(module: 'handlebars')
@@ -35,18 +32,17 @@ dependencies {
         exclude(module: 'rhino')
         exclude(module: 'slf4j-api')
     }
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    compile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude module: 'junit'
     })
-    implementation 'com.android.support:appcompat-v7:25.4.0'
-    implementation('info.cukes:cucumber-android:1.2.5'){
-        exclude module: 'cucumber-jvm-deps'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile('info.cukes:cucumber-android:1.2.5'){
+        exclude group: 'com.android.support'
     }
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
-    implementation 'com.google.code.gson:gson:2.8.0'
-    implementation('com.github.tomakehurst:wiremock:2.6.0'){
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile('com.github.tomakehurst:wiremock:2.6.0'){
         exclude(module: 'httpclient')
         exclude(module: 'slf4j-api')
         exclude(module: 'commons-lang3')
@@ -60,7 +56,7 @@ dependencies {
         exclude(module: 'guava')
         exclude(group: 'org.xmlunit')
     }
-    testImplementation 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 }
 task sourceJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -68,6 +64,12 @@ task sourceJar(type: Jar) {
 }
 
 publishing {
+    repositories {
+        maven {
+            name 'releases'
+            url 'http://nexus.standardbank.co.za:8090/nexus/content/repositories/releases/'
+        }
+    }
     publications {
         maven(MavenPublication) {
             groupId 'com.sbg.bdd'
