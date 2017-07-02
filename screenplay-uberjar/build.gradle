@@ -1,0 +1,107 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+group = 'com.sbg.bdd'
+version = '0.0.1'
+ext {
+    SCOPED_WIREMOCK_VERSION = '0.0.3'
+    SCREENPLAY_VERSION = '0.0.4'
+    PERSONA_CLIENT_VERSION = '0.9.6'
+}
+dependencies {
+    compile("com.squareup.okhttp3:okhttp:3.8.0") { transitive = false }
+    compile("com.squareup.okio:okio:1.13.0") { transitive = false }
+    compile("commons-codec:commons-codec:1.9") { transitive = false }
+    compile("org.apache.commons:commons-lang3:3.4") { transitive = false }
+    compile("com.samskivert:jmustache:1.13") { transitive = false }
+    compile("com.google.guava:guava:19.0") { transitive = false }
+    compile("com.github.tomakehurst:wiremock-client:2.6.0") { transitive = false }
+    compile("org.xmlunit:xmlunit-core:2.3.0") { transitive = false }
+    compile("org.xmlunit:xmlunit-legacy:2.3.0") { transitive = false }
+    compile("org.xmlunit:xmlunit-core:2.3.0") { transitive = false }
+    compile("com.jayway.jsonpath:json-path:2.2.0") { transitive = false }
+    compile("net.minidev:json-smart:2.2.1") { transitive = false }
+    compile("net.minidev:accessors-smart:1.1") { transitive = false }
+    compile("net.sf.jopt-simple:jopt-simple:4.9") { transitive = false }
+    compile("com.flipkart.zjsonpatch:zjsonpatch:0.3.0") { transitive = false }
+    compile("org.apache.commons:commons-collections4:4.1") { transitive = false }
+    compile("com.fasterxml.jackson.core:jackson-databind:2.8.5") { transitive = false }
+    compile("com.fasterxml.jackson.core:jackson-annotations:2.8.0") { transitive = false }
+    compile("com.fasterxml.jackson.core:jackson-core:2.8.5") { transitive = false }
+    compile("org.picocontainer:picocontainer:2.15") { transitive = false }
+    compile("com.google.code.gson:gson:2.8.0") { transitive = false }
+    compile("info.cukes:gherkin:2.12.2") { transitive = false }
+    compile("info.cukes:cucumber-junit:1.2.5") { transitive = false }
+    compile("info.cukes:cucumber-android:1.2.5") { transitive = false }
+    compile("info.cukes:cucumber-picocontainer:1.2.5") { transitive = false }
+    compile("info.cukes:cucumber-java:1.2.5-en") { transitive = false }
+    compile("info.cukes:cucumber-core:1.2.5") { transitive = false }
+    compile("info.cukes:cucumber-html:0.2.3") { transitive = false }
+    compile("info.cukes:cucumber-jvm-deps:1.0.3") { transitive = false }
+
+    compile("com.sbg.bdd:sbg-persona-client:$PERSONA_CLIENT_VERSION") { transitive = false }
+    compile("com.sbg.bdd:screenplay-core:$SCOPED_WIREMOCK_VERSION") { transitive = false }
+    compile("com.sbg.bdd:cucumber-common:$SCOPED_WIREMOCK_VERSION") { transitive = false }
+    compile("com.sbg.bdd:scoped-wiremock-client:$SCOPED_WIREMOCK_VERSION") { transitive = false }
+    compile("com.sbg.bdd:wiremock-resource-impl:$SCOPED_WIREMOCK_VERSION") { transitive = false }
+    compile("com.sbg.bdd:scoped-wiremock-common:$SCOPED_WIREMOCK_VERSION") { transitive = false }
+    compile("com.sbg.bdd:scoped-wiremock-integration-common:$SCOPED_WIREMOCK_VERSION") {
+        transitive = false
+    }
+    compile("com.sbg.bdd:cucumber-jvm-screenplay-scoped:$SCREENPLAY_VERSION") { transitive = false }
+    compile("com.sbg.bdd:cucumber-jvm-screenplay-core:$SCREENPLAY_VERSION") { transitive = false }
+    compile("com.sbg.bdd:screenplay-scoped:$SCREENPLAY_VERSION") { transitive = false }
+    compile("com.sbg.bdd:cucumber-common:$SCOPED_WIREMOCK_VERSION") { transitive = false }
+    compile("com.sbg.bdd:cucumber-jvm-wiremock:$SCREENPLAY_VERSION") { transitive = false }
+    compile("com.sbg.bdd:cucumber-jvm-screenplay-scoped:$SCREENPLAY_VERSION") { transitive = false }
+    compile("com.sbg.bdd:screenplay-wiremock:$SCREENPLAY_VERSION") { transitive = false }
+    compile("com.sbg.bdd:screenplay-scoped:$SCREENPLAY_VERSION") { transitive = false }
+    compile("com.sbg.bdd:scoped-wiremock-client:$SCOPED_WIREMOCK_VERSION") { transitive = false }
+    compile("com.sbg.bdd:common-resource-api:$SCOPED_WIREMOCK_VERSION") { transitive = false }
+}
+
+task uberjar(type: Jar) {
+    from files(sourceSets.main.output.classesDir)
+    from configurations.compile.files.collect { zipTree(it) }
+
+    manifest {
+    }
+}
+artifacts {
+    archives uberjar
+}
+publishing {
+    repositories {
+        maven {
+            name 'releases'
+            url 'http://nexus.standardbank.co.za:8090/nexus/content/repositories/releases/'
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+
+            println "Publishing $project.name:$project.group:$project.version"
+            groupId 'com.sbg.bdd'
+            artifactId "$project.name"
+
+            artifact uberjar {
+            }
+
+            pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name "$rootProject.name"
+                    description "$rootProject.description"
+                }
+                // Preserve compile-scope dependencies
+                asNode().dependencies.'*'.findAll() {
+                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                        dep.name == it.artifactId.text()
+                    }
+                }.each() {
+                    it.scope*.value = 'compile'
+                }
+            }
+        }
+    }
+}

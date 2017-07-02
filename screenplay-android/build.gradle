@@ -23,42 +23,11 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 dependencies {
-    compile 'com.sbg.bdd:screenplay-core:0.0.3'
-    compile('com.sbg.bdd:screenplay-wiremock:0.0.3'){
-        exclude(module: 'org.mozilla:rhino')
-        exclude(module: 'junit')
-        exclude(module: 'handlebars')
-        exclude(module: 'antlr4-runtime')
-        exclude(module: 'rhino')
-        exclude(module: 'slf4j-api')
-    }
     compile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude module: 'junit'
     })
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile('info.cukes:cucumber-android:1.2.5'){
-        exclude module: 'cucumber-java'
-        exclude group: 'com.android.support'
-    }
-    compile('info.cukes:cucumber-java:1.2.5-en'){
-    }
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile('com.github.tomakehurst:wiremock:2.6.0'){
-        exclude(module: 'httpclient')
-        exclude(module: 'slf4j-api')
-        exclude(module: 'commons-lang3')
-        exclude(module: 'jackson-databind')
-        exclude(module: 'jackson-annotations')
-        exclude(module: 'jackson-core')
-        exclude(module: 'asm')
-        exclude(module: 'handlebars')
-        exclude(module: 'junit')
-        exclude(group: 'org.eclipse.jetty')
-        exclude(module: 'guava')
-        exclude(group: 'org.xmlunit')
-    }
+    compile(project(':screenplay-uberjar'))
     testCompile 'junit:junit:4.12'
 }
 task sourceJar(type: Jar) {
@@ -66,20 +35,12 @@ task sourceJar(type: Jar) {
     classifier "source"
 }
 
+//apply from: 'publish.gradle'
 publishing {
     repositories {
         maven {
             name 'releases'
             url 'http://nexus.standardbank.co.za:8090/nexus/content/repositories/releases/'
-        }
-    }
-    publications {
-        maven(MavenPublication) {
-            groupId 'com.sbg.bdd'
-            artifactId 'screenplay-android'
-            version '0.0.1'
-            artifact(sourceJar)
-            artifact("$buildDir/outputs/aar/screenplay-android-release.aar")
         }
     }
 }

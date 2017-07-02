@@ -1,0 +1,34 @@
+NDK is missing a "platforms" directory.
+If you are using NDK, verify the ndk.dir is set to a valid NDK directory.  It is currently set to /home/ampie/Android/Sdk/ndk-bundle.
+If you are not using NDK, unset the NDK variable from ANDROID_NDK_HOME or local.properties to remove this warning.
+
+The Task.leftShift(Closure) method has been deprecated and is scheduled to be removed in Gradle 5.0. Please use Task.doLast(Action) instead.
+	at build_bzh6hbu988sek0m3r1b2iryqt.run(/home/ampie/Code/ampie/screenplay/screenplay-android/build.gradle:1)
+:screenplay-uberjar:dependencies
+
+------------------------------------------------------------
+Project :screenplay-uberjar
+------------------------------------------------------------
+
+runtime - Runtime dependencies for source set 'main' (deprecated, use 'runtimeOnly ' instead).
++--- com.fasterxml.jackson.core:jackson-databind:2.8.5
++--- com.google.code.gson:gson:2.2.2
++--- info.cukes:cucumber-junit:1.2.5
++--- info.cukes:cucumber-android:1.2.5
++--- info.cukes:cucumber-picocontainer:1.2.5
++--- info.cukes:cucumber-java:1.2.5
++--- info.cukes:cucumber-core:1.2.5
++--- info.cukes:cucumber-jvm-deps:1.0.3
++--- com.sbg.bdd:sbg-persona-client:0.9.5
++--- com.sbg.bdd:cucumber-jvm-screenplay-scoped:0.0.1
++--- com.sbg.bdd:scoped-wiremock-client:0.0.1
++--- com.sbg.bdd:scoped-wiremock-client-recording:0.0.1
++--- com.sbg.bdd:cucumber-common:0.0.1
++--- com.sbg.bdd:cucumber-jvm-wiremock:0.0.1
++--- com.sbg.bdd:common-resource-api:0.0.2
++--- com.github.tomakehurst:wiremock-client:2.6.0
+\--- commons-codec:commons-codec:1.9
+
+BUILD SUCCESSFUL
+
+Total time: 1.231 secs

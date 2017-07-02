@@ -1,1 +1,2 @@
 include ':screenplay-android'
+include ':screenplay-uberjar'
